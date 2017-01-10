@@ -9,7 +9,6 @@
         <div class="panel-body">
           {!! Form::open( [
               'url'     => action( 'RoutesController@update', [
-                'request' => '',
                 'id'      => ''
               ] ),
               'method'  => 'POST',
@@ -17,16 +16,19 @@
             ] ) !!}
 
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              {!! Form::label( 'email', 'E-Mail Address', [
+              {!! Form::label( 'email', 'Cantidad de conductores y clientes', [
                 'class' => 'col-md-4 control-label'
               ] ) !!}
 
               <div class="col-md-6">
-                {!! Form::email( 'email', old( 'email' ), [
-                  'id'        => 'email',
+                {!! Form::number( 'driver', old( 'driver' ), [
+                  'id'        => 'driver',
                   'class'     => 'form-control',
                   'required'  => 'required',
-                  'autofocus' => 'autofocus'
+                  'autofocus' => 'autofocus',
+                  'min'       => '1',
+                  'max'       => '100',
+                  'step'      => '1',
                 ] ) !!}
 
                 @if ( $errors->has( 'email' ) )
@@ -37,13 +39,13 @@
               </div>
             </div>
 
-            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has( 'password' ) ? ' has-error' : '' }}">
               {!! Form::label( 'password', 'Password', [
                 'class' => 'col-md-4 control-label'
               ] ) !!}
 
               <div class="col-md-6">
-                {!! Form::password( 'password', '', [
+                {!! Form::password( 'password', [
                   'id'        => 'password',
                   'class'     => 'form-control',
                   'required'  => 'required'
@@ -58,27 +60,20 @@
             </div>
 
             <div class="form-group">
-              <div class="col-md-6 col-md-offset-4">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" name="remember" {{ old( 'remember' ) ? 'checked' : '' }}> Remember Me
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
               <div class="col-md-8 col-md-offset-4">
-                {!! Form::submit( 'Login', '', [
+                {!! Form::submit( 'Iniciar', [
                   'class' => 'btn btn-primary'
                 ] ) !!}
 
-                <a class="btn btn-link" href="{{ url( '/password/reset' ) }}">
-                  Forgot Your Password?
-                </a>
+                {!! Form::button( 'Pausar', [
+                  'class' => 'btn btn-secondary'
+                ] ) !!}
               </div>
             </div>
           {!! Form::close() !!}
+          <table class="table table-striped">
+
+          </table>
         </div>
       </div>
     </div>
