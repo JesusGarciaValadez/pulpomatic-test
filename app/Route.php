@@ -20,5 +20,7 @@ class Route extends Model
    *
    * @var array
    */
-  protected $hidden = [];
+  protected $hidden = [
+    'id', 'created_at', 'updated_at'
+  ];
 }
