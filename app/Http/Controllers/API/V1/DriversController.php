@@ -13,8 +13,6 @@ class DriversController extends Controller
 {
   public function quantity( RoutesQuantityRequest $request )
   {
-    dd( $request->quantity );
-
     $addresses = Route::take( $request->quantity )
                       ->get();
 
