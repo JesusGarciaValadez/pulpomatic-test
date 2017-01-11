@@ -1,128 +1,91 @@
-@extends( 'layouts.app' )
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-@section( 'content' )
-<div class="container">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <div class="panel panel-default">
-        <div class="panel-heading">&nbsp;</div>
-        <div class="panel-body">
-          {!! Form::open( [
-              'url'     => action( 'RoutesController@update', [
-                'id'      => ''
-              ] ),
-              'method'  => 'POST',
-              'class'   => 'form-horizontal',
-            ] ) !!}
+    <title>Laravel</title>
 
-            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              {!! Form::label( 'email', 'Cantidad de conductores y clientes', [
-                'class' => 'col-md-4 control-label'
-              ] ) !!}
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
-              <div class="col-md-6">
-                {!! Form::number( 'driver', old( 'driver' ), [
-                  'id'        => 'driver',
-                  'class'     => 'form-control',
-                  'required'  => 'required',
-                  'autofocus' => 'autofocus',
-                  'min'       => '1',
-                  'max'       => '100',
-                  'step'      => '1',
-                ] ) !!}
+    <!-- Styles -->
+    <style>
+      html, body {
+        background-color: #fff;
+        color: #636b6f;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 100;
+        height: 100vh;
+        margin: 0;
+      }
 
-                @if ( $errors->has( 'email' ) )
-                  <span class="help-block">
-                    <strong>{{ $errors->first( 'email' ) }}</strong>
-                  </span>
-                @endif
-              </div>
-            </div>
+      .full-height {
+        height: 100vh;
+      }
 
-            <div class="form-group">
-              <div class="col-md-8 col-md-offset-4">
-                {!! Form::submit( 'Iniciar', [
-                  'class' => 'btn btn-primary'
-                ] ) !!}
+      .flex-center {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
 
-                {!! Form::button( 'Pausar', [
-                  'class' => 'btn btn-secondary'
-                ] ) !!}
-              </div>
-            </div>
-          {!! Form::close() !!}
+      .position-ref {
+        position: relative;
+      }
 
-          <table class="table table-striped">
+      .top-right {
+        position: absolute;
+        right: 10px;
+        top: 18px;
+      }
 
-          </table>
+      .content {
+        text-align: center;
+      }
+
+      .title {
+        font-size: 84px;
+      }
+
+      .links > a {
+        color: #636b6f;
+        padding: 0 25px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .1rem;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+
+      .m-b-md {
+        margin-bottom: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex-center position-ref full-height">
+      @if (Route::has('login'))
+        <div class="top-right links">
+          <a href="{{ url('/login') }}">Login</a>
+          <a href="{{ url('/register') }}">Register</a>
+        </div>
+      @endif
+
+      <div class="content">
+        <div class="title m-b-md">
+          Laravel
+        </div>
+
+        <div class="links">
+          <a href="https://laravel.com/docs">Documentation</a>
+          <a href="https://laracasts.com">Laracasts</a>
+          <a href="https://laravel-news.com">News</a>
+          <a href="https://forge.laravel.com">Forge</a>
+          <a href="https://github.com/laravel/laravel">GitHub</a>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <div id="map" style="height: 500px;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-@endsection
-
-@section( 'scripts' )
-  @parent
-  <script>
-    //https://developers.google.com/maps/documentation/javascript/examples/distance-matrix
-    function initMap() {
-      // Create a map object and specify the DOM element for display.
-      var map = new google.maps.Map( document.getElementById( 'map' ), {
-        scrollwheel: false,
-        zoom: 15
-      } );
-
-      var image = 'favicon.ico';
-      // Create a marker and set its position.
-      var marker = new google.maps.Marker( {
-        map: map,
-        title: 'Hello World!',
-        draggable: false,
-        animation: google.maps.Animation.DROP,
-        icon: image
-      } );
-
-      var infoWindow = new google.maps.InfoWindow( { map: map } );
-
-      // Try HTML5 geolocation.
-      if ( navigator.geolocation ) {
-        navigator.geolocation.getCurrentPosition( function( position ) {
-          var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-
-          // infoWindow.setPosition( pos );
-          // infoWindow.setContent( 'Location found.' );
-          map.setCenter( pos );
-          marker.setPosition( pos );
-        }, function() {
-          handleLocationError( true, infoWindow, map.getCenter() );
-        } );
-      } else {
-        // Browser doesn't support Geolocation
-        handleLocationError( false, infoWindow, map.getCenter() );
-      }
-
-      function handleLocationError( browserHasGeolocation, infoWindow, pos ) {
-        infoWindow.setPosition( pos );
-        infoWindow.setContent( browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-      }
-    }
-  </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZbmVv82INOxWGI2uJjrcdzL2jeNwpG4U&callback=initMap"
-  async defer></script>
-@endsection
+  </body>
+</html>
