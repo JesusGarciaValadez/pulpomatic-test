@@ -21,7 +21,6 @@ class CreateRoutesTable extends Migration
       $table->text( 'client' );
       $table->text( 'origin' );
       $table->text( 'destination' );
-      $table->text( 'time' );
 
       $table->timestamps();
     });

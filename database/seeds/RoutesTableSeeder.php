@@ -11,6 +11,6 @@ class RoutesTableSeeder extends Seeder
    */
   public function run()
   {
-    $user = factory( Pulpomatic\Route::class, 5 )->create();
+    $user = factory( Pulpomatic\Route::class, 100 )->create();
   }
 }
