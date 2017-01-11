@@ -78,7 +78,9 @@
     @yield('content')
   </div>
 
+  @section( 'scripts' )
   <!-- Scripts -->
   <script src="/js/app.js"></script>
+  @show
 </body>
 </html>

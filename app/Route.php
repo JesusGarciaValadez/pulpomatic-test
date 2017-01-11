@@ -12,7 +12,7 @@ class Route extends Model
    * @var array
    */
   protected $fillable = [
-    'driver', 'client', 'distance', 'time'
+    'driver', 'client', 'origin', 'destination', 'time'
   ];
 
   /**

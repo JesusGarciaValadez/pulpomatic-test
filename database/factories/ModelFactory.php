@@ -28,9 +28,10 @@ $factory->define( Pulpomatic\Route::class, function ( Faker\Generator $faker )
   static $password;
 
   return [
-    'driver'    => $faker->name,
-    'client'    => $faker->company,
-    'distance'  => $faker->latitude( -90, 90 ) . ', ' . $faker->longitude( -180, 180 ),
-    'time'      => $faker->time( 'H:i', 'now' )
+    'driver'      => $faker->name,
+    'client'      => $faker->company,
+    'origin'      => $faker->latitude( -90, 90 ) . ', ' . $faker->longitude( -180, 180 ),
+    'destination' => $faker->latitude( -90, 90 ) . ', ' . $faker->longitude( -180, 180 ),
+    'time'        => $faker->time( 'H:i', 'now' )
   ];
 } );
