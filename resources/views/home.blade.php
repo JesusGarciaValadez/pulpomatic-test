@@ -8,9 +8,10 @@
         <div class="panel-heading">&nbsp;</div>
         <div class="panel-body">
           {!! Form::open( [
-              'url'     => route( 'drivers', [ 'quantity' => '1' ] ),
-              'method'  => 'get',
+              'url'     => route( 'drivers', [ 'quantity' => null ] ),
+              'method'  => 'GET',
               'class'   => 'form-horizontal',
+              'id'      => 'drivers_form'
             ] ) !!}
 
             <div class="form-group{{ $errors->has( 'driver' ) ? ' has-error' : '' }}">
@@ -27,6 +28,7 @@
                   'min'       => '1',
                   'max'       => '100',
                   'step'      => '1',
+                  'v-model'   => 'quantity'
                 ] ) !!}
 
                 @if ( $errors->has( 'quantity' ) )
@@ -40,7 +42,8 @@
             <div class="form-group">
               <div class="col-md-8 col-md-offset-4">
                 {!! Form::submit( 'Iniciar', [
-                  'class' => 'btn btn-primary'
+                  'class'           => 'btn btn-primary',
+                  ':click.prevent'  => 'update()'
                 ] ) !!}
 
                 {!! Form::button( 'Pausar', [
@@ -54,7 +57,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" v-if="origins">
     <div class="col-md-8 col-md-offset-2">
       <div class="panel panel-default">
         <div class="panel-body">
@@ -94,7 +97,7 @@
 
 @section( 'scripts' )
   <script>
-    function initMap() {
+    function initMap( ) {
       // Try HTML5 geolocation.
       if ( navigator.geolocation ) {
         navigator.geolocation.getCurrentPosition( function( position ) {
@@ -106,8 +109,8 @@
           var bounds          = new google.maps.LatLngBounds;
           var markersArray    = [];
 
-          var origin1         = { lat: 19.4239979, lng: -99.1695064 };
-          var destination1    = "Calle Liverpool 158, Juarez, Juárez, 06600 Ciudad de México, CDMX";
+          var origins         = @verbatim{{ origins }};
+          var destinations    = @verbatim{{ destinations }};
 
           // Set icons for drivers and clients
           var originIcon      = 'https://chart.googleapis.com/chart?' +
@@ -126,8 +129,8 @@
 
           var service = new google.maps.DistanceMatrixService;
             service.getDistanceMatrix( {
-              origins:        [ origin1 ],
-              destinations:   [ destination1 ],
+              origins:        origins,
+              destinations:   destinations,
               travelMode:     google.maps.TravelMode.WALKING,
               unitSystem:     google.maps.UnitSystem.METRIC,
               avoidHighways:  false,
@@ -165,7 +168,7 @@
                   for ( var j = 0; j < results.length; j++ ) {
                     geocoder.geocode( { 'address': destinationList[ j ] },
                         showGeocodedAddressOnMap( true ) );
-                    outputDiv.innerHTML += "<tr><td>" + originList[ i ] + "</td><td>" + destinationList[ j ] + "</td><td>" + results[j].distance.text + "</td><td>" + results[j].duration.text + "</td></tr>";
+                    outputDiv.innerHTML += "<tr><td>" + originList[ i ] + "</td><td>" + destinationList[ j ] + "</td><td>" + results[ j ].distance.text + "</td><td>" + results[ j ].duration.text + "</td></tr>";
                   }
                 }
               }
@@ -183,6 +186,37 @@
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZbmVv82INOxWGI2uJjrcdzL2jeNwpG4U&callback=initMap"
     async defer></script>
+  <script src="https://unpkg.com/vue@2.1.8/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.js"></script>
+  <script type="text/javascript">
+    new Vue( {
+      el:       "#drivers_form",
+      data:     {
+        quantity:     1,
+        origins:      [ { lat: 19.4239979, lng: -99.1695064 } ],
+        destinations: [ "Calle Liverpool 158, Juarez, Juárez, 06600 Ciudad de México, CDMX" ],
+      },
+      methods:  {
+        update:   function( event ) {
+          event.preventDefault();
+          console.log( 'Hiii' );
+        },
+      },
+      ready:    function () {
+        // GET request
+        $this.$http( {
+                url:    {{ route( 'drivers', [ 'quantity' => null ] ) }},
+                method: 'GET'
+              } )
+              .then( function( response ) {
+                  // Success callback
+                }, function ( response ) {
+                  // Error callback
+                }
+              );
+      },
+    } );
+  </script>
 
   @parent
 @endsection
