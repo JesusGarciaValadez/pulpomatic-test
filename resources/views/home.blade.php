@@ -8,10 +8,11 @@
         <div class="panel-heading">&nbsp;</div>
         <div class="panel-body">
           {!! Form::open( [
-              'url'     => route( 'drivers', [ 'quantity' => null ] ),
-              'method'  => 'GET',
-              'class'   => 'form-horizontal',
-              'id'      => 'drivers_form'
+              'url'             => route( 'drivers', [ 'quantity' => null ] ),
+              'method'          => 'GET',
+              'class'           => 'form-horizontal',
+              'id'              => 'drivers_form',
+              '@submit.prevent' => 'update'
             ] ) !!}
 
             <div class="form-group{{ $errors->has( 'driver' ) ? ' has-error' : '' }}">
@@ -28,6 +29,7 @@
                   'min'       => '1',
                   'max'       => '100',
                   'step'      => '1',
+                  'value'     => '1',
                   'v-model'   => 'quantity'
                 ] ) !!}
 
@@ -43,7 +45,6 @@
               <div class="col-md-8 col-md-offset-4">
                 {!! Form::submit( 'Iniciar', [
                   'class'           => 'btn btn-primary',
-                  ':click.prevent'  => 'update()'
                 ] ) !!}
 
                 {!! Form::button( 'Pausar', [
@@ -96,7 +97,36 @@
 @endsection
 
 @section( 'scripts' )
+  <script src="https://unpkg.com/vue@2.1.8/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.js"></script>
   <script>
+    var drivers = new Vue( {
+      el:       "#drivers_form",
+      data:     {
+        quantity:     1,
+        origins:      [ { lat: 19.4239979, lng: -99.1695064 } ],
+        destinations: [ "Calle Liverpool 158, Juarez, Juárez, 06600 Ciudad de México, CDMX" ],
+      },
+      methods:  {
+        update:   function( ) {
+          console.log( this.quantity );
+          console.log( "{{ route( 'drivers' ) }}" + this.quantity );
+          // GET request
+          this.$http( {
+                  url:    "{{ route( 'drivers' ) }}" + this.quantity,
+                  method: 'GET'
+                } )
+                .then( function( response ) {
+                    // Success callback
+                    console.log( response );
+                  }, function ( response ) {
+                    // Error callback
+                  }
+                );
+        },
+      },
+    } );
+
     function initMap( ) {
       // Try HTML5 geolocation.
       if ( navigator.geolocation ) {
@@ -109,8 +139,8 @@
           var bounds          = new google.maps.LatLngBounds;
           var markersArray    = [];
 
-          var origins         = @verbatim{{ origins }};
-          var destinations    = @verbatim{{ destinations }};
+          var origins         = drivers.origins;
+          var destinations    = drivers.destinations;
 
           // Set icons for drivers and clients
           var originIcon      = 'https://chart.googleapis.com/chart?' +
@@ -121,7 +151,7 @@
           // Make a new maps instance
           var map = new google.maps.Map( document.getElementById( 'map' ), {
             center: pos,
-            zoom: 18
+            zoom:   18
           } );
 
           // Make a geocoder service instance
@@ -186,37 +216,6 @@
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZbmVv82INOxWGI2uJjrcdzL2jeNwpG4U&callback=initMap"
     async defer></script>
-  <script src="https://unpkg.com/vue@2.1.8/dist/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.js"></script>
-  <script type="text/javascript">
-    new Vue( {
-      el:       "#drivers_form",
-      data:     {
-        quantity:     1,
-        origins:      [ { lat: 19.4239979, lng: -99.1695064 } ],
-        destinations: [ "Calle Liverpool 158, Juarez, Juárez, 06600 Ciudad de México, CDMX" ],
-      },
-      methods:  {
-        update:   function( event ) {
-          event.preventDefault();
-          console.log( 'Hiii' );
-        },
-      },
-      ready:    function () {
-        // GET request
-        $this.$http( {
-                url:    {{ route( 'drivers', [ 'quantity' => null ] ) }},
-                method: 'GET'
-              } )
-              .then( function( response ) {
-                  // Success callback
-                }, function ( response ) {
-                  // Error callback
-                }
-              );
-      },
-    } );
-  </script>
 
   @parent
 @endsection
