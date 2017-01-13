@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Laravel',
+    'name' => 'Pulpomatic Dev Test',
 
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------
@@ -172,11 +172,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Pulpomatic\Providers\AppServiceProvider::class,
+        Pulpomatic\Providers\AuthServiceProvider::class,
+        // Pulpomatic\Providers\BroadcastServiceProvider::class,
+        Pulpomatic\Providers\EventServiceProvider::class,
+        Pulpomatic\Providers\RouteServiceProvider::class,
 
         /*
          * Custom Service Providers

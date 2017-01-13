@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');
+Route::get( '/user', function ( Request $request )
+{
+  return $request->user();
+} )->middleware( 'auth:api' );
+
+Route::group( [ 'middleware' => [ 'throttle' ], 'prefix' => 'v1/' ], function()
+{
+  Route::get( 'drivers/{quantity?}', [ 'as' => 'drivers', 'uses' => 'API\V1\DriversController@quantity' ] );
+} );
