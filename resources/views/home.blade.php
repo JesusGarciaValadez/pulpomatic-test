@@ -30,7 +30,7 @@
                   'max'       => '100',
                   'step'      => '1',
                   'value'     => '1',
-                  ':'   => 'quantity'
+                  'v-model'   => 'quantity'
                 ] ) !!}
 
                 @if ( $errors->has( 'quantity' ) )
@@ -53,7 +53,7 @@
               </div>
             </div>
             <pre>
-              @{{ $data | json }}
+              @{{ $data }}
             </pre>
           {!! Form::close() !!}
         </div>
@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  <div class="row" v-if="origins">
+  <div class="row" v-show="map">
     <div class="col-md-8 col-md-offset-2">
       <div class="panel panel-default">
         <div class="panel-body">
@@ -83,14 +83,7 @@
                 <td></td>
               </tr>
             </tfoot>
-            <tbody id="output">
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
+            <tbody id="output"></tbody>
           </table>
         </div>
       </div>
@@ -102,13 +95,14 @@
 @section( 'scripts' )
   <script src="https://unpkg.com/vue@2.1.8/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.js"></script>
-  <script>
+  <script type="text/javascript">
     var drivers = new Vue( {
       el:       "#drivers_form",
       data:     {
         quantity:     "1",
         origins:      [ { lat: 19.4239979, lng: -99.1695064 } ],
         destinations: [ "Calle Liverpool 158, Juarez, Juárez, 06600 Ciudad de México, CDMX" ],
+        map:          false
       },
       methods:  {
         update:   function( ) {
@@ -120,17 +114,23 @@
                 .then( function( response ) {
                     // Success callback
                     if( response.status == 200 ){
-                      this.origins      = [];
-                      this.destinations = [];
+                      console.log( response.body );
+                      _origins      = [];
+                      _destinations = [];
 
                       for( var i = 0; i <= response.body.length; i++ ) {
-                        this.origins.push( response.body[ i ].origins );
-                        this.destinations.push( response.body[ i ].destinations );
-
-                        console.log( this.origins[ 0 ].lat );
+                        console.log( response.body[ i ] );
+                        _origins.push( response.body[ i ].origin );
+                        _destinations.push( response.body[ i ].destination );
                       }
 
+                      console.log( _origins );
+
+                      this.origins      = _origins;
+                      this.destinations = _destinations;
+
                       this.quantity     = 1;
+                      this.map.$set( true );
                     }
                   }, function ( response ) {
                     // Error callback
