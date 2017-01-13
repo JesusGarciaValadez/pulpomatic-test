@@ -9,7 +9,7 @@ use Pulpomatic\Route;
 
 class DriversController extends Controller
 {
-  public function quantity( $quantity )
+  public function quantity( $quantity = 1 )
   {
     $addresses = Route::take( $quantity )
                       ->get();

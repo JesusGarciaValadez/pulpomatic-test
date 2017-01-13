@@ -20,5 +20,5 @@ Route::get( '/user', function ( Request $request )
 
 Route::group( [ 'middleware' => [ 'throttle' ], 'prefix' => 'v1/' ], function()
 {
-  Route::get( 'drivers/{quantity}', [ 'as' => 'drivers', 'uses' => 'API\V1\DriversController@quantity' ] );
+  Route::get( 'drivers/{quantity?}', [ 'as' => 'drivers', 'uses' => 'API\V1\DriversController@quantity' ] );
 } );

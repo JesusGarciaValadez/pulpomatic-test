@@ -30,7 +30,7 @@
                   'max'       => '100',
                   'step'      => '1',
                   'value'     => '1',
-                  'v-model'   => 'quantity'
+                  ':'   => 'quantity'
                 ] ) !!}
 
                 @if ( $errors->has( 'quantity' ) )
@@ -52,6 +52,9 @@
                 ] ) !!}
               </div>
             </div>
+            <pre>
+              @{{ $data | json }}
+            </pre>
           {!! Form::close() !!}
         </div>
       </div>
@@ -103,22 +106,32 @@
     var drivers = new Vue( {
       el:       "#drivers_form",
       data:     {
-        quantity:     1,
+        quantity:     "1",
         origins:      [ { lat: 19.4239979, lng: -99.1695064 } ],
         destinations: [ "Calle Liverpool 158, Juarez, Juárez, 06600 Ciudad de México, CDMX" ],
       },
       methods:  {
         update:   function( ) {
-          console.log( this.quantity );
-          console.log( "{{ route( 'drivers' ) }}" + this.quantity );
           // GET request
           this.$http( {
-                  url:    "{{ route( 'drivers' ) }}" + this.quantity,
+                  url:    "{{ route( 'drivers' ) }}/" + this.quantity,
                   method: 'GET'
                 } )
                 .then( function( response ) {
                     // Success callback
-                    console.log( response );
+                    if( response.status == 200 ){
+                      this.origins      = [];
+                      this.destinations = [];
+
+                      for( var i = 0; i <= response.body.length; i++ ) {
+                        this.origins.push( response.body[ i ].origins );
+                        this.destinations.push( response.body[ i ].destinations );
+
+                        console.log( this.origins[ 0 ].lat );
+                      }
+
+                      this.quantity     = 1;
+                    }
                   }, function ( response ) {
                     // Error callback
                   }
